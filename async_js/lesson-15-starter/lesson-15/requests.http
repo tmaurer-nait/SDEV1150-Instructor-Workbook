@@ -1,0 +1,29 @@
+### GET all books
+GET http://localhost:3000/books
+Accept: application/json
+
+### GET first book
+GET http://localhost:3000/books/1
+Accept: application/json
+
+### POST new book
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "Tom's Best Book",
+  "author": "Tom Maurer",
+  "year": 2025,
+  "genre": "Good Books"
+}
+
+### PATCH update a book
+PATCH http://localhost:3000/books/947b
+Content-Type: application/json
+
+{
+  "author": "Tom, your favourite instructor"
+}
+
+### DELETE a book
+DELETE http://localhost:3000/books/3
