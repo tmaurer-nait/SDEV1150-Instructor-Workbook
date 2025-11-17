@@ -20,6 +20,13 @@
       "author": "Ganondorf",
       "year": 2021,
       "genre": "Epic"
+    },
+    {
+      "id": "810d",
+      "genre": "Epic",
+      "author": "Tom",
+      "title": "Tom's book",
+      "year": 2025
     }
   ]
 }
