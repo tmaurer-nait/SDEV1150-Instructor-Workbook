@@ -4,9 +4,9 @@ template.innerHTML = `
       <style>
 
         :host {
-          --card-bg: #ffffff;
-          --card-color: #222222;
-          --card-accent: #0077ff;
+          --card-bg: var(--global-card-bg, #ffffff);
+          --card-color: var(--global-card-color, #222222);
+          --card-accent: var(--global-card-accent, #0077ff);
           display: block;
         }
 
@@ -73,7 +73,24 @@ class UserCard extends HTMLElement {
     // Add the element to the shadow DOM
     shadow.appendChild(content);
   }
+
+  // Tells the browser which attributes to watch
+  static get observedAttributes() {
+    return ["avatar"];
+  }
+
+  // Handles any changes to watched attributes
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name == "avatar" && this.shadowRoot) {
+      const img = this.shadowRoot.querySelector("img");
+      img.src = newValue;
+    }
+  }
 }
+
+// TODO Practice:
+// - Add a css var to control the description color
+// - Add a theme attribute on user-card that toggles a small internal dark mode class
 
 // Define the custom HTML element
 customElements.define("user-card", UserCard);
