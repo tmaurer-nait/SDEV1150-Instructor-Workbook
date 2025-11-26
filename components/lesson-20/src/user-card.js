@@ -51,6 +51,7 @@ template.innerHTML = `
         <div class="info">
           <slot name="name" class="name"></slot>
           <slot name="description" class="description"></slot>
+          <button>Follow</button>
         </div>
       </div>
 `;
@@ -58,6 +59,7 @@ template.innerHTML = `
 class UserCard extends HTMLElement {
   constructor() {
     super(); // Initialize the HTMLElement
+    this._followed = false; // Initialize followed status to false (assume we haven't followed anyone)
     const shadow = this.attachShadow({ mode: "open" });
 
     // Find the template in my HTML
@@ -70,8 +72,19 @@ class UserCard extends HTMLElement {
     const img = content.querySelector("img");
     img.src = this.getAttribute("avatar");
 
+    // save a reference to the button and bind it to the followed status
+    this._btn = content.querySelector("button");
+    this._btn.addEventListener("click", () => {
+      this._setFollow(!this._followed);
+      console.log(this._followed);
+    });
+
     // Add the element to the shadow DOM
     shadow.appendChild(content);
+  }
+
+  _setFollow(value) {
+    this._followed = value;
   }
 
   // Tells the browser which attributes to watch
