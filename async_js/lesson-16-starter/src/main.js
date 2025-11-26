@@ -9,7 +9,7 @@ const bookList = document.querySelector("#bookList");
 // Define a function to handle loading and displaying the list of books
 
 const loadHandler = async () => {
-  // TODO: display loading text
+  // display loading text
   list.innerHTML = "<li>Loading...</li>";
 
   // Error handling

@@ -7,9 +7,8 @@ const endpoint = "http://localhost:3000/books";
 
 async function loadHandler() {
   list.innerHTML = "<li>Loading...</li>";
-
+  loadButton.disabled = true;
   try {
-    loadButton.disabled = true;
     const books = await fetchData(endpoint);
 
     // Simulate a delay for demonstration purposes
@@ -22,11 +21,10 @@ async function loadHandler() {
       li.textContent = `${book.title} by ${book.author}`;
       list.appendChild(li);
     });
-    loadButton.disabled = false;
   } catch (error) {
     console.error("Error Fetching API:", error);
-    loadButton.disabled = false;
   }
+  loadButton.disabled = false;
 }
 
 async function submitHandler(e) {
