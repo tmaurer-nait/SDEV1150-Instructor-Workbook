@@ -2,9 +2,17 @@ const template = document.createElement("template");
 
 template.innerHTML = `
       <style>
+
+        :host {
+          --card-bg: #ffffff;
+          --card-color: #222222;
+          --card-accent: #0077ff;
+          display: block;
+        }
+
         .card {
-          background: #ffffff;
-          color: #222222;
+          background: var(--card-bg);
+          color: var(--card-color);
           border: 1px solid #e6e6e6;
           padding: 12px;
           border-radius: 8px;
@@ -16,13 +24,30 @@ template.innerHTML = `
         }
 
         .name {
+          color: var(--card-accent);
+          display: block;
           font-size: 1.2em;
           font-weight: bold;
           margin: 0;
         }
+
+        .description {
+          font-size: 0.9rem;
+          color: #666;
+          display: block;
+          margin-top: 4px;
+        }
+
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex: 0 0 80px;
+        }
       </style>
       <div class="card">
-        <img src="" width="80" height="80" alt="avatar">
+        <img src="" alt="avatar">
         <div class="info">
           <slot name="name" class="name"></slot>
           <slot name="description" class="description"></slot>
