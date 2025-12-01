@@ -57,9 +57,13 @@ template.innerHTML = `
 `;
 
 class UserCard extends HTMLElement {
+  #followed = false;
+  #user = null;
+
   constructor() {
     super(); // Initialize the HTMLElement
-    this._followed = false; // Initialize followed status to false (assume we haven't followed anyone)
+    this.#followed = false; // Initialize followed status to false (assume we haven't followed anyone)
+    this.#user = null; // initialize the user to not exist
     const shadow = this.attachShadow({ mode: "open" });
 
     // Find the template in my HTML
@@ -69,18 +73,61 @@ class UserCard extends HTMLElement {
     // Clone the template
     const content = template.content.cloneNode(true);
 
-    const img = content.querySelector("img");
-    img.src = this.getAttribute("avatar");
+    this._img = content.querySelector("img");
+    this._img.src = this.getAttribute("avatar");
 
     // save a reference to the button and bind it to the followed status
     this._btn = content.querySelector("button");
     this._btn.addEventListener("click", () => {
-      this._setFollow(!this._followed);
-      console.log(this._followed);
+      this._setFollow(!this.#followed);
+      console.log(this.#followed);
     });
 
     // Add the element to the shadow DOM
     shadow.appendChild(content);
+  }
+
+  set user(obj) {
+    // TODO: Validate the obj to actually be a user
+
+    this.#user = obj;
+
+    // render the visuals
+    this._renderFromUser();
+  }
+
+  get user() {
+    return this.#user;
+  }
+
+  _renderFromUser() {
+    // Check if a user exists
+    if (this.#user) {
+      // TODO: Update the image source
+      if (this.#user.avatar) {
+        this._img.src = this.#user.avatar;
+      } else {
+        this._img.src = "https://placehold.co/80x80/0077ff/ffffff";
+      }
+
+      // Update the id attribute
+      this.setAttribute("user-id", this.#user.id || "-1");
+
+      // Update the name slot
+      const nameSlot = this.shadowRoot.querySelector("[name='name']");
+      if (nameSlot) {
+        nameSlot.textContent = this.#user.name || "NAME GOES HERE";
+      }
+
+      // Update the description slot
+      const descriptionSlot = this.shadowRoot.querySelector(
+        "[name='description']"
+      );
+      if (descriptionSlot) {
+        descriptionSlot.textContent =
+          this.#user.description || "DESCRIPTION GOES HERE";
+      }
+    }
   }
 
   follow() {
@@ -92,8 +139,8 @@ class UserCard extends HTMLElement {
   }
 
   _setFollow(value) {
-    this._followed = value;
-    this._btn.textContent = this._followed ? "Following" : "Follow";
+    this.#followed = value;
+    this._btn.textContent = this.#followed ? "Following" : "Follow";
 
     // emit the event so any parent can react
     // let id = this.getAttribute("user-id");
@@ -105,7 +152,7 @@ class UserCard extends HTMLElement {
         // detail is just the info about the event
         detail: {
           id: this.getAttribute("user-id") || -1,
-          followed: this._followed,
+          followed: this.#followed,
         },
         bubbles: true, // The event propagates
         composed: true, // The event can propagate beyond the shadow DOM
@@ -114,7 +161,7 @@ class UserCard extends HTMLElement {
   }
 
   get followed() {
-    return this._followed;
+    return this.#followed;
   }
 
   // Tells the browser which attributes to watch
@@ -126,10 +173,28 @@ class UserCard extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     // this.shadowRoot - ensures the component exists before doing anything
     if (name == "avatar" && this.shadowRoot) {
-      const img = this.shadowRoot.querySelector("img");
-      img.src = newValue;
+      this._img.src = newValue;
     }
   }
+
+  // Lifecycle: Called when the element is added to the DOM
+  connectedCallback() {
+    // TODO: bind the local listeners
+
+    // check if a user exists
+    if (this.#user) {
+      // If it does render from user
+      this._renderFromUser();
+    } else {
+      // Else render fallback
+      const avatar = this.getAttribute("avatar");
+      this._img.src = avatar || "https://placehold.co/80x80";
+    }
+  }
+
+  // Lifecycl: Called when the element is removed from the DOM
+  disconnectedCallback() {}
+
   // <user-card avatar="a"> -> <user-card avatar="b">
   // name: avatar, oldValue: a, newValue: b
 }

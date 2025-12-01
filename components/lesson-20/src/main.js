@@ -52,3 +52,25 @@ toggleButton.addEventListener("click", () => {
     dark ? "gold" : "#0077ff"
   );
 });
+
+const users = [
+  {
+    id: 1,
+    name: "Zelda",
+    avatar: "assets/zelda-avatar.png",
+    description: "Cool Lady",
+  },
+  {
+    id: 2,
+    name: "Link",
+    avatar: "assets/link-avatar.png",
+    description: "Cool Guy",
+  },
+];
+
+users.forEach((user) => {
+  const card = document.createElement("user-card");
+  // render from the user
+  card.user = user;
+  document.querySelector("main").appendChild(card);
+});
