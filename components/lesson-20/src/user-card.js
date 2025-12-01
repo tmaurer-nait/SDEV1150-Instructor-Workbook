@@ -78,14 +78,16 @@ class UserCard extends HTMLElement {
 
     // save a reference to the button and bind it to the followed status
     this._btn = content.querySelector("button");
-    this._btn.addEventListener("click", () => {
-      this._setFollow(!this.#followed);
-      console.log(this.#followed);
-    });
 
     // Add the element to the shadow DOM
     shadow.appendChild(content);
   }
+
+  // using arrow syntax to automatically bind "this"
+  _onButtonClick = () => {
+    this._setFollow(!this.#followed);
+    console.log(this.#followed);
+  };
 
   set user(obj) {
     // TODO: Validate the obj to actually be a user
@@ -180,6 +182,7 @@ class UserCard extends HTMLElement {
   // Lifecycle: Called when the element is added to the DOM
   connectedCallback() {
     // TODO: bind the local listeners
+    this._btn.addEventListener("click", this._onButtonClick);
 
     // check if a user exists
     if (this.#user) {
@@ -193,7 +196,9 @@ class UserCard extends HTMLElement {
   }
 
   // Lifecycl: Called when the element is removed from the DOM
-  disconnectedCallback() {}
+  disconnectedCallback() {
+    this._btn.removeEventListener("click", this._onButtonClick);
+  }
 
   // <user-card avatar="a"> -> <user-card avatar="b">
   // name: avatar, oldValue: a, newValue: b
