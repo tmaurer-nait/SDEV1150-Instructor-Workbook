@@ -11,7 +11,8 @@ const dynamicUserCard = `
 document.querySelector("main").innerHTML += dynamicUserCard;
 
 // Create another user card using JavaScript DOM API only and append it to the main element
-const anotherCard = document.createElement("user-card"); // <user-card>
+const anotherCard = document.createElement("user-card"); // <user-card avatar=null>
+anotherCard.follow();
 anotherCard.setAttribute("avatar", "https://placehold.co/80x80"); // <user-card avatar="https://placehold.co/80x80">
 const nameSpan = document.createElement("span");
 nameSpan.setAttribute("slot", "name");
@@ -23,6 +24,13 @@ descriptionSpan.textContent = "Poor bald child";
 anotherCard.appendChild(nameSpan);
 anotherCard.appendChild(descriptionSpan);
 document.querySelector("main").appendChild(anotherCard);
+
+// whenever a card fires the follow-change event log all its info
+document.querySelector("main").addEventListener("follow-change", (e) => {
+  const card = e.target;
+  const name = card.querySelector("[slot=name]").textContent;
+  console.log(card, name, card.followed);
+});
 
 const toggleButton = document.createElement("button");
 toggleButton.textContent = "Toggle Theme";

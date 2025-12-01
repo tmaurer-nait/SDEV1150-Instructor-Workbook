@@ -83,8 +83,38 @@ class UserCard extends HTMLElement {
     shadow.appendChild(content);
   }
 
+  follow() {
+    this._setFollow(true);
+  }
+
+  unfollow() {
+    this._setFollow(false);
+  }
+
   _setFollow(value) {
     this._followed = value;
+    this._btn.textContent = this._followed ? "Following" : "Follow";
+
+    // emit the event so any parent can react
+    // let id = this.getAttribute("user-id");
+    // if (id == null){
+    //   id = -1
+    // }
+    this.dispatchEvent(
+      new CustomEvent("follow-change", {
+        // detail is just the info about the event
+        detail: {
+          id: this.getAttribute("user-id") || -1,
+          followed: this._followed,
+        },
+        bubbles: true, // The event propagates
+        composed: true, // The event can propagate beyond the shadow DOM
+      })
+    );
+  }
+
+  get followed() {
+    return this._followed;
   }
 
   // Tells the browser which attributes to watch
@@ -94,11 +124,14 @@ class UserCard extends HTMLElement {
 
   // Handles any changes to watched attributes
   attributeChangedCallback(name, oldValue, newValue) {
+    // this.shadowRoot - ensures the component exists before doing anything
     if (name == "avatar" && this.shadowRoot) {
       const img = this.shadowRoot.querySelector("img");
       img.src = newValue;
     }
   }
+  // <user-card avatar="a"> -> <user-card avatar="b">
+  // name: avatar, oldValue: a, newValue: b
 }
 
 // TODO Practice:
