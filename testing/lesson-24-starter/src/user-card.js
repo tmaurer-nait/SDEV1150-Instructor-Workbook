@@ -1,5 +1,5 @@
 // Self-contained user card web component with Shadow DOM
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
   <style>
     :host {
@@ -64,10 +64,10 @@ class UserCard extends HTMLElement {
     // Bind the button handler to the custom element
     this._onButtonClick = this._onButtonClick.bind(this);
 
-    const shadow = this.attachShadow({ mode: 'open' });
+    const shadow = this.attachShadow({ mode: "open" });
     const content = template.content.cloneNode(true);
-    this._img = content.querySelector('img');
-    this._btn = content.querySelector('button');
+    this._img = content.querySelector("img");
+    this._btn = content.querySelector("button");
     shadow.appendChild(content);
   }
 
@@ -76,18 +76,18 @@ class UserCard extends HTMLElement {
       if (this.#user.avatar) {
         this._img.src = this.#user.avatar;
       } else {
-        this._img.src = 'https://placehold.co/80x80/0077ff/ffffff';
+        this._img.src = "https://placehold.co/80x80/0077ff/ffffff";
       }
 
-      this.setAttribute('user-id', this.#user.id || '');
+      this.setAttribute("user-id", this.#user.id || "");
       const nameSlot = this.shadowRoot.querySelector('[name="name"]');
       if (nameSlot) {
-        nameSlot.textContent = this.#user.name || '';
+        nameSlot.textContent = this.#user.name || "";
       }
 
       const descSlot = this.shadowRoot.querySelector('[name="description"]');
       if (descSlot) {
-        descSlot.textContent = this.#user.description || '';
+        descSlot.textContent = this.#user.description || "";
       }
     }
   }
@@ -106,22 +106,22 @@ class UserCard extends HTMLElement {
   }
 
   connectedCallback() {
-    this._btn.addEventListener('click', this._onButtonClick);
+    this._btn.addEventListener("click", this._onButtonClick);
 
     if (this.#user) {
       this._renderFromUser();
     } else {
-      const avatar = this.getAttribute('avatar');
+      const avatar = this.getAttribute("avatar");
       if (avatar) {
         this._img.src = avatar;
       } else {
-        this._img.src = 'https://placehold.co/80x80/0077ff/ffffff';
+        this._img.src = "https://placehold.co/80x80/0077ff/ffffff";
       }
     }
   }
 
   disconnectedCallback() {
-    this._btn.removeEventListener('click', this._onButtonClick);
+    this._btn.removeEventListener("click", this._onButtonClick);
   }
 
   follow() {
@@ -138,22 +138,27 @@ class UserCard extends HTMLElement {
 
   _setFollow(value) {
     this.#followed = value;
-    this._btn.textContent = this.#followed ? 'Following' : 'Follow';
-    this.dispatchEvent(new CustomEvent('follow-change', {
-      detail: { id: this.getAttribute('user-id') || null, followed: this.followed },
-      bubbles: true,
-      composed: true,
-    }));
+    this._btn.textContent = this.#followed ? "Following" : "Follow";
+    this.dispatchEvent(
+      new CustomEvent("follow-change", {
+        detail: {
+          id: this.getAttribute("user-id") || null,
+          followed: this.followed,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   // Respond to attribute changes if needed in the future
   static get observedAttributes() {
-    return ['avatar'];
+    return ["avatar"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'avatar' && this.shadowRoot) {
-      const img = this.shadowRoot.querySelector('img');
+    if (name === "avatar" && this.shadowRoot) {
+      const img = this.shadowRoot.querySelector("img");
       if (img) {
         img.src = newValue;
       }
@@ -161,6 +166,6 @@ class UserCard extends HTMLElement {
   }
 }
 
-customElements.define('user-card', UserCard);
+customElements.define("user-card", UserCard);
 
 export default UserCard;
