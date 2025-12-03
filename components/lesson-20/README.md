@@ -267,6 +267,10 @@ document.querySelector('main').appendChild(anotherUserCard);
 ### Extend the Component
 Add a "Details" slot within the shadow DOM that shows a random "status" message (e.g., "Ready for adventure!").
 
+Add validation in the user setter to ensure required fields exist (e.g., id, name).
+Persist followed state to localStorage so follow state survives reload.
+Emit a separate event when avatar image is clicked (e.g., open-profile).
+
 ## Common Errors & Fixes
 
 | Issue | Cause | Solution |

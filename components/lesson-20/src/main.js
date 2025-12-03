@@ -25,11 +25,20 @@ anotherCard.appendChild(nameSpan);
 anotherCard.appendChild(descriptionSpan);
 document.querySelector("main").appendChild(anotherCard);
 
+let followedCount = 0;
+
 // whenever a card fires the follow-change event log all its info
 document.querySelector("main").addEventListener("follow-change", (e) => {
-  const card = e.target;
-  const name = card.querySelector("[slot=name]").textContent;
-  console.log(card, name, card.followed);
+  // Option 1
+  followedCount += e.detail.followed ? 1 : -1;
+  // Option 2
+  // if (e.detail.followed){
+  //   followedCount += 1;
+  // } else {
+  //   followedCount -= 1;
+  // }
+  document.querySelector("#follow-counter").textContent =
+    followedCount.toString();
 });
 
 const toggleButton = document.createElement("button");
